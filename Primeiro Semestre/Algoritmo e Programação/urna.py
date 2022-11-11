@@ -1,4 +1,5 @@
 def mostrarMenu():
+
     print('''    ============ MENU ============
     1 - Cadastrar candidato
     2 - Cadastrar eleitor
@@ -90,7 +91,7 @@ def votar(l, e, b, n):
                             count = 0
                             for k in range(len(l)):
                                 if l[k][1] == op and l[k][3] == listaCargos[i]:
-                                    op2 = input("Candidato : {} - {} | Confirma? [sim/nao] : ".format(l[k][0],l[k][2])).lower()
+                                    op2 = input("\033[0;33mCandidato : {} - {} | Confirma? [sim/nao] : \033[m".format(l[k][0],l[k][2])).lower()
                                     print()
                                     if op2 == "sim":
                                         l[k][4] += 1
@@ -128,26 +129,31 @@ def ordenarLista(lista):
                 lista[i] = lista[j]
                 lista[j] = aux
 
-def criarMenuParaApuracao(cargo, lista):
+def criarMenuParaApuracao(cargo, lista, vb, vn, pos):
+    
+    if len(lista) != 0:
+        v = 15
+        print("="*v+" "+cargo+" "+"="*v)
+        print(("\033[0;32mVencedor : {}\033[m".format(lista[0][0])).center(2*v+len(cargo)))
+        print("="*(v+1)+"="*len(cargo)+"="*(v+1))
+        for i, c in enumerate(lista):
+            print("{}º : {} ( {} ) | {} VOTO(S) |".format(i+1, c[0], c[2], c[4]))
+        print("="*(v+1)+"="*len(cargo)+"="*(v+1))
+        print()
+        print("Votos Brancos : {}\n".format(vb[pos]))
+        print("Votos Nulos : {}\n".format(vn[pos]))
+        print("="*(v+1)+"="*len(cargo)+"="*(v+1))
+        print()
 
-    v = 15
-    print("="*v+cargo+"="*v)
-    print("Candidato | Partido | Votos")
-    print("="*v+"="*len(cargo)+"="*v)
-    for i, c in enumerate(lista):
-        print("{}º : {}  |  {}  |  {}  |".format(i+1, c[0],c[2],c[4]))
-    print("="*v+"="*len(cargo)+"="*v)
-    print()
-
-def apurarResultados(pref, gov, pres):
+def apurarResultados(pref, gov, pres, vb, vn):
 
     ordenarLista(pref)
     ordenarLista(gov)
     ordenarLista(pres)
 
-    criarMenuParaApuracao("PREFEITO",pref)
-    criarMenuParaApuracao("GOVERNADOR",gov)
-    criarMenuParaApuracao("PRESIDENTE",pres)
+    criarMenuParaApuracao("PREFEITO",pref, vb, vn, 0)
+    criarMenuParaApuracao("GOVERNADOR",gov, vb, vn, 1)
+    criarMenuParaApuracao("PRESIDENTE",pres, vb, vn, 2)
 
 
 def mostrarReE():
@@ -183,12 +189,13 @@ while True:
     elif digito == 4:
         
         separarCargos(candidatos, prefeitos, governadores, presidentes)
-        apurarResultados(prefeitos, governadores, presidentes)
+        apurarResultados(prefeitos, governadores, presidentes, votosBrancos, votosNulos)
 
     elif digito == 5:
         pass
+
     elif digito == 6:
-        print("Programa finalizado!")
+        print("Programa finalizado!\n")
         break
     else:
         print("\033[0;31mOpção inválida!\033[m\n")
