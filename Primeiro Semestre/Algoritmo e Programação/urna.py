@@ -57,7 +57,7 @@ def cadastrarEleitor(l):
             continue
         break
 
-def votar(l, e, b, n):
+def votar(l, e, b, n, tv):
 
     for el in range(len(e)):
         print("-"*55)
@@ -81,10 +81,14 @@ def votar(l, e, b, n):
                         print()
                         if op == -1:
                             b[i] += 1
+                            tv[i] += 1
+                            e[el][i+2] = True
                             print("Voto em branco!\n")
                             break
                         elif op == -2:
                             n[i] += 1
+                            tv[i] += 1
+                            e[el][i+2] = True
                             print("Voto nulo!\n")
                             break
                         else:
@@ -95,6 +99,7 @@ def votar(l, e, b, n):
                                     print()
                                     if op2 == "sim":
                                         l[k][4] += 1
+                                        tv[i] += 1
                                         e[el][i+2] = True
                                         print("\033[0;32mSucesso | Seu voto para {} foi confirmado!\033[m\n".format(listaCargos[i]))
                                         podeBreak = True
@@ -129,31 +134,37 @@ def ordenarLista(lista):
                 lista[i] = lista[j]
                 lista[j] = aux
 
-def criarMenuParaApuracao(cargo, lista, vb, vn, pos):
+def criarMenuParaApuracao(cargo, lista, vb, vn, pos, tv):
     
     if len(lista) != 0:
         v = 15
         print("="*v+" "+cargo+" "+"="*v)
-        print(("\033[0;32mVencedor : {}\033[m".format(lista[0][0])).center(2*v+len(cargo)))
+        print(("Vencedor : {}".format(lista[0][0])).center(2*v+len(cargo)))
         print("="*(v+1)+"="*len(cargo)+"="*(v+1))
         for i, c in enumerate(lista):
             print("{}º : {} ( {} ) | {} VOTO(S) |".format(i+1, c[0], c[2], c[4]))
         print("="*(v+1)+"="*len(cargo)+"="*(v+1))
         print()
-        print("Votos Brancos : {}\n".format(vb[pos]))
-        print("Votos Nulos : {}\n".format(vn[pos]))
+        print("Total de votos : {}\n".format(tv[pos]))
+
+        porcentagemBrancos = (vb[pos]*100)/tv[pos]
+        print("Votos Brancos : {} ({:.1f}%)\n".format(vb[pos], porcentagemBrancos))
+
+        porcentagemNulos = (vn[pos]*100)/tv[pos]
+        print("Votos Nulos : {} ({:.1f}%)\n".format(vn[pos], porcentagemNulos))
+
         print("="*(v+1)+"="*len(cargo)+"="*(v+1))
         print()
 
-def apurarResultados(pref, gov, pres, vb, vn):
+def apurarResultados(pref, gov, pres, vb, vn, tv):
 
     ordenarLista(pref)
     ordenarLista(gov)
     ordenarLista(pres)
 
-    criarMenuParaApuracao("PREFEITO",pref, vb, vn, 0)
-    criarMenuParaApuracao("GOVERNADOR",gov, vb, vn, 1)
-    criarMenuParaApuracao("PRESIDENTE",pres, vb, vn, 2)
+    criarMenuParaApuracao("PREFEITO",pref, vb, vn, 0, tv)
+    criarMenuParaApuracao("GOVERNADOR",gov, vb, vn, 1, tv)
+    criarMenuParaApuracao("PRESIDENTE",pres, vb, vn, 2, tv)
 
 
 def mostrarReE():
@@ -167,6 +178,8 @@ votosNulos = [0,0,0]
 prefeitos = list()
 governadores = list()
 presidentes = list()
+
+totalVotos = [0,0,0]
 
 while True:
 
@@ -184,12 +197,12 @@ while True:
 
     elif digito == 3:
 
-        votar(candidatos, eleitores, votosBrancos, votosNulos)
+        votar(candidatos, eleitores, votosBrancos, votosNulos, totalVotos)
 
     elif digito == 4:
         
         separarCargos(candidatos, prefeitos, governadores, presidentes)
-        apurarResultados(prefeitos, governadores, presidentes, votosBrancos, votosNulos)
+        apurarResultados(prefeitos, governadores, presidentes, votosBrancos, votosNulos, totalVotos)
 
     elif digito == 5:
         pass
