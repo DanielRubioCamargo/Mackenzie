@@ -148,10 +148,10 @@ def criarMenuParaApuracao(cargo, lista, vb, vn, pos, tv):
         print("Total de votos : {}\n".format(tv[pos]))
 
         porcentagemBrancos = (vb[pos]*100)/tv[pos]
-        print("Votos Brancos : {} ({:.1f}%)\n".format(vb[pos], porcentagemBrancos))
+        print("Votos Brancos : {} ({:.1f} %)\n".format(vb[pos], porcentagemBrancos))
 
         porcentagemNulos = (vn[pos]*100)/tv[pos]
-        print("Votos Nulos : {} ({:.1f}%)\n".format(vn[pos], porcentagemNulos))
+        print("Votos Nulos : {} ({:.1f} %)\n".format(vn[pos], porcentagemNulos))
 
         print("="*(v+1)+"="*len(cargo)+"="*(v+1))
         print()
@@ -180,6 +180,8 @@ governadores = list()
 presidentes = list()
 
 totalVotos = [0,0,0]
+
+print("\nIniciando urna eletrônica...\n")
 
 while True:
 
