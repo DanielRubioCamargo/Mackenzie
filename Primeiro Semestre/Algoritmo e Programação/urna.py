@@ -10,7 +10,8 @@ def mostrarMenu():
     ==============================
     ''')
 
-def cadastrarCandidato(l):
+# cadastra um candidato e insere uma lista com seus dados (nome, numero, partido, cargo e quantidade de votos) em uma lista global l
+def cadastrarCandidato(l): 
 
     while True:
 
@@ -35,6 +36,8 @@ def cadastrarCandidato(l):
             continue
         break
 
+'''cadastra um eleitor e insere uma lista com seus dados 
+(nome, cpf, mais 3 valores booleanos para caso tenha votado já para determinado cargo) em uma lista global l'''
 def cadastrarEleitor(l):
 
     while True:
@@ -57,65 +60,68 @@ def cadastrarEleitor(l):
             continue
         break
 
+''' função para votação, parametros : lista dos candidadtos(l), lista dos eleitores(e), lista de votos brancos(b),
+lista de votos nulos(n), total de votos(tv)
+'''
 def votar(l, e, b, n, tv):
 
-    for el in range(len(e)):
-        print("-"*55)
+    for el in range(len(e)): # percorre a lista de candidatos
         print()
-        if len(l) != 0:
+        if len(l) != 0: # verifica se há candidatos para serem votados
             listaCargos = ["PREFEITO","GOVERNADOR","PRESIDENTE"]
-            for i in range(3):
-                podeContinuar = False
-                for j in range(len(l)):
-                    if l[j][3] == listaCargos[i] and e[el][i+2] == False:
-                        podeContinuar = True
+            for i in range(3): # percorrerá 3 vezes (1ºvez para prefeito se tiver), (2ºvez para governador se tiver), (3ºvez para presidente se tiver)
+                podeContinuar = False # variavel para permitir que o programa avançe
+                for j in range(len(l)): # para cada candidato
+                    if l[j][3] == listaCargos[i] and e[el][i+2] == False: # verifica se o cargo do candidato foi digitado corretamente de acordo com a listaCargos e se o eleitor não votou ainda
+                        podeContinuar = True # o programa pode continuar
                         break
                 if podeContinuar:
+                    print("-"*55)
                     print("Vez de votar : {} | CPF : {}\n".format(e[el][0],e[el][1]))
                     print("Vote para ", listaCargos[i], " !\n")
-                    podeBreak = False
+                    podeBreak = False # variavel criada para se tornar True e sair do while quando a votação do eleitor finalizar corretamente
                     while True:
                         if podeBreak:
                             break
                         op = int(input("Digite o número de seu candidato : "))
                         print()
-                        if op == -1:
-                            b[i] += 1
-                            tv[i] += 1
-                            e[el][i+2] = True
+                        if op == -1: # voto branco
+                            b[i] += 1 # incrementa uma unidade na lista de votos brancos para certo cargo
+                            tv[i] += 1 # incrementa o total de votos para certo cargo
+                            e[el][i+2] = True # eleitor votou
                             print("Voto em branco!\n")
                             break
-                        elif op == -2:
-                            n[i] += 1
-                            tv[i] += 1
-                            e[el][i+2] = True
+                        elif op == -2: # voto nulo
+                            n[i] += 1 # incrementa uma unidade na lista de votos nulos para certo cargo
+                            tv[i] += 1 # incrementa o total de votos para certo cargo
+                            e[el][i+2] = True # eleitor votou
                             print("Voto nulo!\n")
                             break
-                        else:
-                            count = 0
+                        else: # o eleitor digitou algum numero sem ser -1 ou -2
+                            count = 0 # contador dos candidatos para no final verificar se é o ultimo candidato a ser verificado no for loop
                             for k in range(len(l)):
-                                if l[k][1] == op and l[k][3] == listaCargos[i]:
+                                if l[k][1] == op: # se o numero do candidato corresponder a opção digitada
                                     op2 = input("\033[0;33mCandidato : {} - {} | Confirma? [sim/nao] : \033[m".format(l[k][0],l[k][2])).lower()
-                                    print()
+                                    print() # op2 mostra o candidato segundo a posição do for e quer confirmar a escolha
                                     if op2 == "sim":
-                                        l[k][4] += 1
-                                        tv[i] += 1
-                                        e[el][i+2] = True
+                                        l[k][4] += 1 # mais um voto para este candidato
+                                        tv[i] += 1 # total de votos incrementado
+                                        e[el][i+2] = True # eleitor votou
                                         print("\033[0;32mSucesso | Seu voto para {} foi confirmado!\033[m\n".format(listaCargos[i]))
-                                        podeBreak = True
+                                        podeBreak = True # pode dar o break do while
                                         break
                                     else:
                                         print("\033[0;31mVoto não confirmado! Tente novamente : \033[m\n")
-                                        continue
+                                        break # volta para a escolha de um candidato (mesmo eleitor)
                                 count += 1
-                                if count == len(l):
+                                if count == len(l): # percorreu toda a lista e não achou o numero digitado
                                     print("\033[0;31mNúmero de candidato inválido!\033[m\n")
         else:
             print("\033[0;33m\nNão há candidatos para serem votados!\033[m\n")
         print("-"*55)
         print()
 
-def separarCargos(l, pref, gov, pres):
+def separarCargos(l, pref, gov, pres): # adiciona cada candidato em sua respectiva lista
     
     for i in l:
         if i[3] == "PREFEITO":
@@ -125,7 +131,7 @@ def separarCargos(l, pref, gov, pres):
         else:
             pres.append(i)
 
-def ordenarLista(lista):
+def ordenarLista(lista): # ordenar por quantidade de votos
 
     for i in range(len(lista)-1):
         for j in range(i+1, len(lista)):
@@ -134,7 +140,7 @@ def ordenarLista(lista):
                 lista[i] = lista[j]
                 lista[j] = aux
 
-def criarMenuParaApuracao(cargo, lista, vb, vn, pos, tv):
+def criarMenuParaApuracao(cargo, lista, vb, vn, pos, tv): # cria a interface das apurações
     
     if len(lista) != 0:
         v = 15
