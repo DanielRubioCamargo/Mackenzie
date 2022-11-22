@@ -86,11 +86,11 @@ def cadastrarEleitor(l):
 lista de votos nulos(n), total de votos(tv), lista de partidos(lp)
 '''
 def votar(l, e, b, n, tv, lp):
-
+    
+    listaCargos = ["PREFEITO","GOVERNADOR","PRESIDENTE"]
     for el in range(1,len(e)): # percorre a lista de eleitores
         print()
         if len(l) != 0: # verifica se há candidatos para serem votados
-            listaCargos = ["PREFEITO","GOVERNADOR","PRESIDENTE"]
             for i in range(3): # percorrerá 3 vezes (1ºvez para prefeito se tiver), (2ºvez para governador se tiver), (3ºvez para presidente se tiver)
                 podeContinuar = False # variavel para permitir que o programa avançe
                 for j in range(len(l)): # para cada candidato
@@ -161,9 +161,7 @@ def ordenarListaVotosCandidatos(lista): # ordenar por quantidade de votos
     for i in range(len(lista)-1):
         for j in range(i+1, len(lista)):
             if lista[i][4] < lista[j][4]:
-                aux = lista[i]
-                lista[i] = lista[j]
-                lista[j] = aux
+                lista[i], lista[j] = lista[j], lista[i]
 
 def criarMenuParaApuracao(cargo, lista, vb, vn, pos, tv): # cria a interface das apurações
     
